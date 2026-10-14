@@ -117,6 +117,36 @@ $EDITOR hermes-acme/SOUL.local.md
 ./hermes-core/scripts/install.sh acme
 ```
 
+## Financial guard (no purchases, no payments, no card data)
+
+Two layers, in every profile:
+
+1. **Rules** in `SOUL.base.md` → *Money, purchases and payment data (hard rules)*.
+2. **Enforcement**: `hooks/financial-guard.py`, a Hermes `pre_tool_call` shell hook with `fail_closed: true`. It runs before **every** tool call and blocks:
+
+| What | Examples |
+|------|----------|
+| Real payment-card numbers (Luhn + card network) and CVV codes | typing, sending, saving or echoing them — published test cards like `4242…` are allowed |
+| Live payment secrets | `sk_live_…`, `rk_live_…` anywhere |
+| Saved cards in the Hermes vault | `browser_vault` fills of payment items; any vault fill needs Villa's approval |
+| Checkout / cart / payment pages | browser navigation or `open` to checkout, cart, buy, pay, PayPal, Stripe Checkout… (docs sites allowed; billing pages need approval) |
+| Money-moving SaaS actions (Composio / MCP) | `*_CREATE_PAYMENT*`, `*_CREATE_ORDER`, `*_PAYOUT`, `*_REFUND`, `*_SUBSCRIBE`, any write action on Stripe, PayPal, banks, Amazon, Shopify…; connecting those apps |
+| Purchase commands | `stripe … --live`, domain registration (`vercel domains buy`, `route53domains register-domain`), AWS/Azure reservations, `mas purchase`, POST/PUT to live payment APIs |
+
+`scripts/install.sh` runs the tests, copies the hook to `~/.hermes/agent-hooks/`, adds it to each installed profile's `config.yaml` if missing, approves it in that profile's `shell-hooks-allowlist.json` (otherwise dashboard/gateway sessions would skip it), and checks `hermes -p <profile> hooks list`.
+
+```bash
+python3 hermes-core/hooks/test_financial_guard.py   # run the tests
+percy hooks doctor                                   # check the installed hook
+```
+
+Limits — be aware:
+
+- **Claude Code** runs as a separate process, outside Hermes hooks. In the Percy `jira-ticket` skill it is restricted by `--allowedTools` / `--disallowedTools` (no curl, wget, open, stripe, WebFetch) and `claude-rules.md`.
+- The hook checks tool *inputs*; it cannot see what a button on a page does. Blocking checkout URLs and card data covers the common paths, not every possible site.
+- **Strongest control: do not connect payment or shopping apps in Composio, and do not save cards in the Hermes vault** (`percy vault list` should show no payment items).
+- Editing the hook script does not require re-approval (the allowlist keys on the command string). Review changes to `hooks/` like CI config.
+
 ## Important limits
 
 - **Profiles are not sandboxes.** With the `local` terminal backend every profile has your user's full filesystem access; the scope rules in SOUL are guidance, not enforcement. Use a Docker backend for hard isolation.

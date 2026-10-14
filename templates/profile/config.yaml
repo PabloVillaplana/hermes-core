@@ -24,3 +24,12 @@ mcp_servers:
       x-consumer-api-key: "${COMPOSIO_API_KEY}"
     connect_timeout: 60
     timeout: 180
+
+# Financial guard — blocks purchases, payments, money transfers and payment-card data in every
+# tool call. Installed and approved by hermes-core/scripts/install.sh. fail_closed: if the script
+# is missing or crashes, tool calls are blocked instead of allowed.
+hooks:
+  pre_tool_call:
+    - command: "~/.hermes/agent-hooks/financial-guard.py"
+      timeout: 10
+      fail_closed: true
