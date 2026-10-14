@@ -13,6 +13,10 @@ TARGET="$(cd "$TARGET" && pwd)"
 ( cd "$TEMPLATE" && find . -type f ) | while read -r rel; do
   rel="${rel#./}"
   dest="$TARGET/$rel"
+  if [ "$rel" = "AGENTS.md" ] && [ -f "$TARGET/CLAUDE.md" ]; then
+    echo "skip    AGENTS.md (CLAUDE.md exists; AGENTS.md would hide it in Hermes)"
+    continue
+  fi
   if [ -e "$dest" ]; then
     echo "exists  $rel"
   else

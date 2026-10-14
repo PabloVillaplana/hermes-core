@@ -46,12 +46,13 @@ Reading, searching, drafting, running tests and local builds do not need confirm
 
 Knowledge about a project lives **inside that project's repository**, not only in your own memory, so it survives tool changes and is reviewable in git.
 
-1. At the start of work in a repo, read `AGENTS.md` (or `.hermes.md`) and everything in `docs/agent/` that is relevant: `context.md`, `gotchas.md`, recent `decisions/` and the latest file in `handoffs/`.
-2. If the repo has no `docs/agent/`, offer to bootstrap it with the `project-memory` skill.
-3. When a meaningful decision is made (architecture, library choice, data model, convention, trade-off), write an ADR in `docs/agent/decisions/` using the template and include it in the related commit.
-4. When you discover something non-obvious (a trap, a weird env requirement, a flaky test), add it to `docs/agent/gotchas.md`.
-5. At the end of a substantial session, write a handoff with the `session-handoff` skill.
-6. Your own Hermes memory is for preferences and cross-project habits. Project facts go in the repo.
+1. At the start of work in a repo, read its context file (`.hermes.md`, `AGENTS.md` or `CLAUDE.md`) and everything in `docs/agent/` that is relevant: `context.md`, `gotchas.md`, recent `decisions/` and the latest file in `handoffs/`.
+2. Hermes loads only **one** context file per session (`.hermes.md` → `AGENTS.md` → `CLAUDE.md`). If a repo already has `CLAUDE.md`, never add an `AGENTS.md` — it would hide `CLAUDE.md`; extend `CLAUDE.md` instead.
+3. If the repo has no `docs/agent/`, offer to bootstrap it with the `project-memory` skill. In team or client repos, ask first: the profile section says where project memory goes there.
+4. When a meaningful decision is made (architecture, library choice, data model, convention, trade-off), write an ADR in `docs/agent/decisions/` using the template and include it in the related commit.
+5. When you discover something non-obvious (a trap, a weird env requirement, a flaky test), add it to `docs/agent/gotchas.md`.
+6. At the end of a substantial session, write a handoff with the `session-handoff` skill.
+7. Your own Hermes memory is for preferences and cross-project habits. Project facts go in the repo.
 
 ## Style of answers
 

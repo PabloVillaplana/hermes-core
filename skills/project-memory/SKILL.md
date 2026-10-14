@@ -35,6 +35,10 @@ The canonical template lives in `hermes-core/templates/project/`. If Villa has t
 
 It never overwrites existing files.
 
+## Existing CLAUDE.md
+
+Hermes loads one context file per session (`.hermes.md` → `AGENTS.md` → `CLAUDE.md`). If the repo already has a `CLAUDE.md`, do not create `AGENTS.md`: keep `CLAUDE.md` as the entry point and add a short pointer to `docs/agent/` in it.
+
 ## Bootstrapping a repo without the script
 
 1. Read the repo first: README, package manifests (`composer.json`, `package.json`), docker files, CI config, folder structure.
