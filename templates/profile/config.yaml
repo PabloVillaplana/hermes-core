@@ -1,0 +1,26 @@
+# Hermes config for the "__NAME__" profile.
+# Shipped on first install. Later `hermes profile update` keeps your local edits
+# unless you run it with --force-config (or FORCE_CONFIG=1 hermes-core/scripts/install.sh).
+
+model:
+  # "auto" reuses the OAuth logins from the root ~/.hermes/auth.json (Anthropic / OpenAI).
+  provider: "auto"
+  # default: "<provider>/<model>"   # pin a model per profile if you want
+
+terminal:
+  backend: "local"
+  # Where tool commands start. Absolute path — "." would mean "wherever hermes was launched".
+  cwd: "__CWD__"
+  # "auto" = tools use your real HOME (git, gh, ssh, composer, pnpm credentials are shared
+  # across profiles). Use "profile" only if this profile needs separate CLI identities.
+  home_mode: "auto"
+
+mcp_servers:
+  # Composio Connect — one Composio user/account per profile, key in this profile's .env
+  # (~/.hermes/profiles/__NAME__/.env). Remove this block if the profile needs no apps.
+  composio:
+    url: "https://connect.composio.dev/mcp"
+    headers:
+      x-consumer-api-key: "${COMPOSIO_API_KEY}"
+    connect_timeout: 60
+    timeout: 180
