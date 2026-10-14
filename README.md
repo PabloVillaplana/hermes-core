@@ -6,7 +6,6 @@ Shared rules, skills and tooling for all of Villa's [Hermes Agent](https://githu
 AI Profiles/
 ├── hermes-core/        # this repo — shared rules + scripts (not installed as a profile)
 ├── hermes-percy/       # Percy / Buyside (Buyermls)
-├── hermes-datacor/     # Datacorp
 ├── hermes-mythic/      # Mythic
 └── hermes-personal/    # own ventures + personal life
 ```
